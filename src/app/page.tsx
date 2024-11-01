@@ -25,6 +25,17 @@ const TypeWriter = ({ text, onComplete }: { text: string; onComplete?: () => voi
   return <span>{displayedText}</span>
 }
 
+const ContentWrapper = ({ children, onComplete }: { children: React.ReactNode; onComplete?: () => void }) => {
+  useEffect(() => {
+    // Call onComplete immediately for JSX content
+    onComplete && onComplete()
+  }, [onComplete])
+
+  return <div>{children}</div>
+}
+
+
+
 export default function Home() {
   const [input, setInput] = useState('')
   const [output, setOutput] = useState<JSX.Element[]>([
@@ -258,19 +269,28 @@ ${currentSection ? getNavigationInfo() : ''}`
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (isTyping) return
 
-    const result = handleCommand(input)
+    const trimmedInput = input.trim()
+    if (!trimmedInput) return
+
+    const result = handleCommand(trimmedInput)
     if (result !== null) {
+      // Set typing state for both string and JSX content
       setIsTyping(true)
+
       setOutput(prevOutput => [
         ...prevOutput,
-        <TypeWriter key={`input-${prevOutput.length}`} text={`> ${input}`} />,
+        <TypeWriter key={`input-${prevOutput.length}`} text={`> ${trimmedInput}`} />,
         <div key={`output-${prevOutput.length}`} className="flex flex-col space-y-2">
           {typeof result === 'string' ? (
-            <TypeWriter text={result} onComplete={() => setIsTyping(false)} />
+            <TypeWriter 
+              text={result} 
+              onComplete={() => setIsTyping(false)} 
+            />
           ) : (
-            result
+            <ContentWrapper onComplete={() => setIsTyping(false)}>
+              {result}
+            </ContentWrapper>
           )}
           {currentSection && (
             <div className="flex items-center space-x-2 text-green-300 text-sm mt-2">
@@ -283,8 +303,6 @@ ${currentSection ? getNavigationInfo() : ''}`
           )}
         </div>
       ])
-    } else {
-      setIsTyping(false)
     }
     setInput('')
   }
@@ -313,7 +331,6 @@ ${currentSection ? getNavigationInfo() : ''}`
           onChange={(e) => setInput(e.target.value)}
           className="bg-transparent border-none outline-none flex-grow text-xs sm:text-sm md:text-base"
           autoFocus
-          disabled={isTyping}
           placeholder={currentSection ? "Type 'next' or 'prev' to navigate..." : "Type 'help' for commands..."}
         />
       </form>
