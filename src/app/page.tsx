@@ -1,101 +1,308 @@
-import Image from "next/image";
+'use client'
+
+import { useState, useEffect } from 'react'
+import { ChevronRight, Mail, Download, ArrowRight, ArrowLeft } from 'lucide-react'
+
+// Previous TypeWriter component remains the same...
+const TypeWriter = ({ text, onComplete }: { text: string; onComplete?: () => void }) => {
+  const [displayedText, setDisplayedText] = useState('')
+
+  useEffect(() => {
+    let i = 0
+    const typingInterval = setInterval(() => {
+      if (i < text.length) {
+        setDisplayedText((prev) => prev + text.charAt(i))
+        i++
+      } else {
+        clearInterval(typingInterval)
+        onComplete && onComplete()
+      }
+    }, 20)
+
+    return () => clearInterval(typingInterval)
+  }, [text, onComplete])
+
+  return <span>{displayedText}</span>
+}
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [input, setInput] = useState('')
+  const [output, setOutput] = useState<JSX.Element[]>([
+    <TypeWriter key="welcome" text="Welcome to my portfolio. Type 'help' for available commands." />
+  ])
+  const [isTyping, setIsTyping] = useState(false)
+  const [currentSection, setCurrentSection] = useState<string | null>(null)
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
+  // Updated section order to include skills
+  const sectionOrder = ['summary', 'skills', 'experience', 'projects', 'social', 'cv', 'connect']
+
+  type SectionKey = 'summary' | 'skills' | 'experience' | 'projects' | 'social' | 'cv' | 'connect';
+
+  const sections: Record<SectionKey, { title: string; content: string | JSX.Element }> = {
+    // Previous sections remain the same...
+    summary: {
+      title: "Summary",
+      content: "I'm a passionate backend developer and web technology enthusiast with experience in modern web development and community engagement."
+    },
+    skills: {
+      title: "Technical Skills",
+      content: `
+    ┌───────────────────────────────────────────────────────────┐
+    │                    Technical Skills                       │
+    └───────────────────────────────────────────────────────────┘
+
+    Frontend & Frameworks:
+    ┌─────────────────┐    ┌──────────────┐
+    │    Next.js      │    │   React.js   │
+    │   ╭──────╮     │    │    ⚛️ ⚛️ ⚛️    │
+    │   │ N │        │    │   </>  </>   │
+    │   ╰──────╯     │    │    {props}   │
+    └─────────────────┘    └──────────────┘
+
+    Backend & Databases:
+    ┌─────────────────┐    ┌──────────────┐
+    │    MongoDB      │    │   Node.js    │
+    │    ╭───╮       │    │   ╭────╮     │
+    │    │ M │       │    │   │ JS │     │
+    │    ╰───╯       │    │   ╰────╯     │
+    └─────────────────┘    └──────────────┘
+
+    Blockchain & Web3:
+    ┌─────────────────┐    ┌──────────────┐
+    │    Solidity     │    │  Ethereum    │
+    │    ╭─────╮     │    │   ◈──◈──◈    │
+    │    │ Sol │     │    │    ─◈──◈     │
+    │    ╰─────╯     │    │     ◈─◈      │
+    └─────────────────┘    └──────────────┘
+
+    Tools & Other:
+    ┌─────────────────┐    ┌──────────────┐
+    │     Git         │    │   Docker     │
+    │    /│\\         │    │   ╭────╮     │
+    │   / │ \\        │    │   │ 🐳 │     │
+    │  /  │  \\       │    │   ╰────╯     │
+    └─────────────────┘    └──────────────┘
+
+    Proficiency Level:
+    ▓▓▓▓▓ Expert
+    ▓▓▓▓░ Advanced
+    ▓▓▓░░ Intermediate
+    ▓▓░░░ Basic
+
+    • Frontend: React.js ▓▓▓▓░  Next.js ▓▓▓▓░
+    • Backend: Node.js ▓▓▓▓░  MongoDB ▓▓▓▓░
+    • Web3: Solidity ▓▓▓░░  Ethereum ▓▓▓░░
+    • Tools: Git ▓▓▓▓░  Docker ▓▓▓░░`
+    },
+    experience: {
+      title: "Experience",
+      content: `
+    ┌───────────────────────────────────────────────────────────┐
+    │                     Experience Timeline                   │
+    │                                                           │
+    │    Backend Internship       GDG Web & Web3 Associate      │
+    │    (Aug 2024 - Present)     (Ongoing)                     │
+    │     ___________             ___________                   │
+    │    |  _   _   _|           |  _   _   _|                  │
+    │    | | | | | | |           | | | | | | |                  │
+    │    | | | | | | |    -----> | | | | | | |                  │
+    │    | | | | | | |           | | | | | | |                  │
+    │    | |_| |_| | |           | |_| |_| | |                  │
+    │    |___________|           |___________|                  │
+    │                                                           │
+    └───────────────────────────────────────────────────────────┘
+
+• Backend Developer Intern (August 2024 - Present)
+  - Develop and maintain RESTful APIs using Node.js and Express
+  - Implement database solutions with MongoDB and PostgreSQL
+  - Collaborate with frontend developers to integrate backend services
+  - Participate in code reviews and implement best practices for scalable backend architecture
+
+• GDG Web and Web3 Associate (Ongoing)
+  - Organize and lead workshops on web development technologies
+  - Create content for Web3 technology awareness and education
+  - Collaborate with other GDG members to plan and execute tech events
+  - Mentor aspiring web developers in both traditional and blockchain-based web technologies`
+    },
+    projects: {
+      title: "Projects",
+      content: `
+    ┌───────────────────────────────────────────────────────────┐
+    │                     Project Showcase                      │
+    │                                                           │
+    │    1. DecentralizedExchange   3. NFTMarketplace           │
+    │       ╔════╗  ╔════╗             ╔════╗  ╔════╗           │
+    │       ║ ETH ║⇄║TOKEN║            ║ NFT ║⇄║ ETH ║          │
+    │       ╚════╝  ╚════╝             ╚════╝  ╚════╝           │
+    │                                                           │
+    │    2. AI-PoweredChatbot     4. NextJS Blog with MongoDB   │
+    │         ╔═══╗    ┌───┐           ┌───┐  ┌───┐            │
+    │         ║BOT║ ⇄ │USER│           │ N │⇄│ M │            │
+    │         ╚═══╝    └───┘           └───┘  └───┘            │
+    │                                                           │
+    └───────────────────────────────────────────────────────────┘
+
+1. DecentralizedExchange - A Web3 project for trading ERC20 tokens
+2. AI-PoweredChatbot - A Web2 application using natural language processing
+3. NFTMarketplace - A platform for minting and trading NFTs
+4. NextJS Blog with MongoDB - A modern, server-side rendered blog application`
+    },
+    social: {
+      title: "Social",
+      content: `
+• GitHub: github.com/yourusername
+• LinkedIn: linkedin.com/in/yourusername
+• Twitter: twitter.com/yourusername`
+    },
+    cv: {
+      title: "CV",
+      content: (
+        <div className="flex flex-col items-start space-y-4">
+          <p>Download my CV to learn more about my experience and skills.</p>
           <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="/path-to-your-cv.pdf"
+            download
+            className="inline-flex items-center px-4 py-2 bg-green-500 text-black rounded hover:bg-green-600 transition-colors"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
+            <Download className="mr-2 h-4 w-4" />
+            Download CV
           </a>
+          <p className="text-xs text-green-300">Format: PDF • Size: ~500KB</p>
+        </div>
+      )
+    },
+    connect: {
+      title: "Connect",
+      content: (
+        <div className="flex flex-col items-start space-y-4">
+          <p>Feel free to reach out to me at: your.email@example.com</p>
           <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="mailto:your.email@example.com"
+            className="inline-flex items-center px-4 py-2 bg-green-500 text-black rounded hover:bg-green-600 transition-colors"
           >
-            Read our docs
+            <Mail className="mr-2 h-4 w-4" />
+            Send Email
           </a>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      )
+    }
+  }
+
+  // Rest of the component remains the same...
+  const getNavigationInfo = () => {
+    if (!currentSection) return ""
+    const currentIndex = sectionOrder.indexOf(currentSection)
+    const total = sectionOrder.length
+    return `\n[Section ${currentIndex + 1}/${total}] Type 'next' or 'prev' to navigate between sections`
+  }
+
+  const handleCommand = (cmd: string) => {
+    const normalizedCmd = cmd.toLowerCase().trim()
+    
+    if (normalizedCmd === 'next' || normalizedCmd === 'prev') {
+      if (!currentSection) {
+        setCurrentSection('summary')
+        return sections.summary.content
+      }
+
+      const currentIndex = sectionOrder.indexOf(currentSection)
+      let newIndex
+
+      if (normalizedCmd === 'next') {
+        newIndex = (currentIndex + 1) % sectionOrder.length
+      } else {
+        newIndex = (currentIndex - 1 + sectionOrder.length) % sectionOrder.length
+      }
+
+      const newSection = sectionOrder[newIndex] as SectionKey
+      setCurrentSection(newSection)
+      return sections[newSection].content
+      setCurrentSection(newSection)
+      return sections[newSection].content
+    }
+
+    switch (normalizedCmd) {
+      case 'help':
+        return `Available commands:
+• Navigation: next, prev
+• Sections: ${sectionOrder.join(', ')}
+• Utility: clear
+
+${currentSection ? getNavigationInfo() : ''}`
+      case 'clear':
+        setOutput([])
+        setCurrentSection(null)
+        return null
+      default:
+        if (sectionOrder.includes(normalizedCmd)) {
+          setCurrentSection(normalizedCmd)
+          return sections[normalizedCmd as SectionKey].content
+        }
+        return 'Command not recognized. Type "help" for available commands.'
+    }
+  }
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (isTyping) return
+
+    const result = handleCommand(input)
+    if (result !== null) {
+      setIsTyping(true)
+      setOutput(prevOutput => [
+        ...prevOutput,
+        <TypeWriter key={`input-${prevOutput.length}`} text={`> ${input}`} />,
+        <div key={`output-${prevOutput.length}`} className="flex flex-col space-y-2">
+          {typeof result === 'string' ? (
+            <TypeWriter text={result} onComplete={() => setIsTyping(false)} />
+          ) : (
+            result
+          )}
+          {currentSection && (
+            <div className="flex items-center space-x-2 text-green-300 text-sm mt-2">
+              <ArrowLeft className="h-4 w-4" />
+              <span>prev</span>
+              <span className="mx-2">|</span>
+              <span>next</span>
+              <ArrowRight className="h-4 w-4" />
+            </div>
+          )}
+        </div>
+      ])
+    } else {
+      setIsTyping(false)
+    }
+    setInput('')
+  }
+
+  useEffect(() => {
+    const terminal = document.getElementById('terminal')
+    if (terminal) {
+      terminal.scrollTop = terminal.scrollHeight
+    }
+  }, [output])
+
+  return (
+    <div className="min-h-screen bg-black text-green-500 p-2 sm:p-4 font-mono">
+      <div id="terminal" className="h-[calc(100vh-8rem)] overflow-auto">
+        {output.map((element, index) => (
+          <div key={index} className="whitespace-pre-wrap mb-2 text-xs sm:text-sm md:text-base">
+            {element}
+          </div>
+        ))}
+      </div>
+      <form onSubmit={handleSubmit} className="mt-4 flex items-center">
+        <ChevronRight className="mr-2 h-3 w-3 sm:h-4 sm:w-4" />
+        <input
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          className="bg-transparent border-none outline-none flex-grow text-xs sm:text-sm md:text-base"
+          autoFocus
+          disabled={isTyping}
+          placeholder={currentSection ? "Type 'next' or 'prev' to navigate..." : "Type 'help' for commands..."}
+        />
+      </form>
     </div>
-  );
+  )
 }
