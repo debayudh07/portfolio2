@@ -43,7 +43,7 @@ export default function Home() {
     // Previous sections remain the same...
     summary: {
       title: "Summary",
-      content: "I'm a passionate backend developer and web technology enthusiast with experience in modern web development and community engagement."
+      content: " My Name is Debayudh Basu and I'm a passionate backend developer and web technology enthusiast with experience in modern web development and community engagement."
     },
     skills: {
       title: "Technical Skills",
