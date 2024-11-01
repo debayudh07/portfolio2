@@ -178,9 +178,9 @@ export default function Home() {
     social: {
       title: "Social",
       content: `
-• GitHub: https://github.com/debayudh07
-• LinkedIn: https://www.linkedin.com/in/debayudh-basu-5280562b2/
-• Twitter: https://x.com/BasuDebayudh`
+• <a href="https://github.com/debayudh07" target="_blank" rel="noopener noreferrer">GitHub</a>
+• <a href="https://www.linkedin.com/in/debayudh-basu-5280562b2/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+• <a href="https://x.com/BasuDebayudh" target="_blank" rel="noopener noreferrer">Twitter</a>`
     },
     cv: {
       title: "CV",
