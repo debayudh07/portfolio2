@@ -151,9 +151,9 @@ export default function Home() {
     social: {
       title: "Social",
       content: `
-• GitHub: github.com/yourusername
-• LinkedIn: linkedin.com/in/yourusername
-• Twitter: twitter.com/yourusername`
+• GitHub: https://github.com/debayudh07
+• LinkedIn: https://www.linkedin.com/in/debayudh-basu-5280562b2/
+• Twitter: https://x.com/BasuDebayudh`
     },
     cv: {
       title: "CV",
@@ -161,7 +161,7 @@ export default function Home() {
         <div className="flex flex-col items-start space-y-4">
           <p>Download my CV to learn more about my experience and skills.</p>
           <a
-            href="/path-to-your-cv.pdf"
+            href="/Deba.pdf"
             download
             className="inline-flex items-center px-4 py-2 bg-green-500 text-black rounded hover:bg-green-600 transition-colors"
           >
@@ -176,9 +176,9 @@ export default function Home() {
       title: "Connect",
       content: (
         <div className="flex flex-col items-start space-y-4">
-          <p>Feel free to reach out to me at: your.email@example.com</p>
+          <p>Feel free to reach out to me at: debayudhbasu@gmail.com</p>
           <a
-            href="mailto:your.email@example.com"
+            href="mailto:debayudhbasu@gmail.com"
             className="inline-flex items-center px-4 py-2 bg-green-500 text-black rounded hover:bg-green-600 transition-colors"
           >
             <Mail className="mr-2 h-4 w-4" />
