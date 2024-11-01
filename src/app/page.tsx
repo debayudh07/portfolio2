@@ -184,7 +184,7 @@ export default function Home() {
             <Download className="mr-2 h-4 w-4" />
             Download CV
           </a>
-          <p className="text-xs text-green-300">Format: PDF • Size: ~500KB</p>
+          <p className="text-xs text-green-300">Format: PDF • Size: ~65.8KB</p>
         </div>
       )
     },
