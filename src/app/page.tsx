@@ -1,10 +1,6 @@
-/* eslint-disable */
-'use client'
-
 import { useState, useEffect } from 'react'
 import { ChevronRight, Mail, Download, ArrowRight, ArrowLeft } from 'lucide-react'
 
-// Previous TypeWriter component remains the same...
 const TypeWriter = ({ text, onComplete }: { text: string; onComplete?: () => void }) => {
   const [displayedText, setDisplayedText] = useState('')
 
@@ -34,16 +30,33 @@ export default function Home() {
   const [isTyping, setIsTyping] = useState(false)
   const [currentSection, setCurrentSection] = useState<string | null>(null)
 
-  // Updated section order to include skills
   const sectionOrder = ['summary', 'skills', 'experience', 'projects', 'social', 'cv', 'connect']
 
   type SectionKey = 'summary' | 'skills' | 'experience' | 'projects' | 'social' | 'cv' | 'connect';
 
   const sections: Record<SectionKey, { title: string; content: string | JSX.Element }> = {
-    // Previous sections remain the same...
     summary: {
       title: "Summary",
-      content: " My Name is Debayudh Basu and I'm a passionate backend developer and web technology enthusiast with experience in modern web development and community engagement."
+      content: (
+        <div className="flex flex-col md:flex-row items-start gap-6 mt-4">
+          <div className="w-32 h-32 relative overflow-hidden rounded-lg border-2 border-green-500">
+            <img 
+              src="/deba2.jpeg" 
+              alt="Debayudh Basu" 
+              className="object-cover w-full h-full"
+            />
+          </div>
+          <div className="flex flex-col space-y-4">
+            <p className="text-lg font-bold">Debayudh Basu</p>
+            <p className="text-green-400">Backend Developer & Web Technology Enthusiast</p>
+            <p className="text-sm leading-relaxed">
+              I'm a passionate backend developer and web technology enthusiast with experience 
+              in modern web development and community engagement. Specialized in building 
+              scalable backend solutions and exploring the frontiers of Web3 technology.
+            </p>
+          </div>
+        </div>
+      )
     },
     skills: {
       title: "Technical Skills",
@@ -189,7 +202,6 @@ export default function Home() {
     }
   }
 
-  // Rest of the component remains the same...
   const getNavigationInfo = () => {
     if (!currentSection) return ""
     const currentIndex = sectionOrder.indexOf(currentSection)
@@ -216,8 +228,6 @@ export default function Home() {
       }
 
       const newSection = sectionOrder[newIndex] as SectionKey
-      setCurrentSection(newSection)
-      return sections[newSection].content
       setCurrentSection(newSection)
       return sections[newSection].content
     }
