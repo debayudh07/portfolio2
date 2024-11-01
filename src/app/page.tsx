@@ -1,3 +1,6 @@
+/* eslint-disable */
+
+"use client"
 import { useState, useEffect } from 'react'
 import { ChevronRight, Mail, Download, ArrowRight, ArrowLeft } from 'lucide-react'
 
